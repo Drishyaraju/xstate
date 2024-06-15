@@ -12,9 +12,6 @@ const XState = () => {
     const fetchCountries = async () => {
       try {
         const response = await fetch('https://crio-location-selector.onrender.com/countries');
-        if (!response.ok) {
-          throw new Error('Failed to fetch countries');
-        }
         const data = await response.json();
         setCountries(data);
       } catch (error) {
@@ -30,9 +27,6 @@ const XState = () => {
       const fetchStates = async () => {
         try {
           const response = await fetch(`https://crio-location-selector.onrender.com/country=${selectedCountry}/states`);
-          if (!response.ok) {
-            throw new Error('Failed to fetch states');
-          }
           const data = await response.json();
           setStates(data);
         } catch (error) {
@@ -52,9 +46,6 @@ const XState = () => {
       const fetchCities = async () => {
         try {
           const response = await fetch(`https://crio-location-selector.onrender.com/country=${selectedCountry}/state=${selectedState}/cities`);
-          if (!response.ok) {
-            throw new Error('Failed to fetch cities');
-          }
           const data = await response.json();
           setCities(data);
         } catch (error) {
@@ -69,25 +60,22 @@ const XState = () => {
   }, [selectedCountry, selectedState]);
 
   const handleCountryChange = (e) => {
-    const country = e.target.value;
-    setSelectedCountry(country);
+    setSelectedCountry(e.target.value);
     setSelectedState('');
     setSelectedCity('');
   };
 
   const handleStateChange = (e) => {
-    const state = e.target.value;
-    setSelectedState(state);
+    setSelectedState(e.target.value);
     setSelectedCity('');
   };
 
   const handleCityChange = (e) => {
-    const city = e.target.value;
-    setSelectedCity(city);
+    setSelectedCity(e.target.value);
   };
 
   return (
-    <div className="app-container">
+    <div className='app-container'>
       <h1>Select Location</h1>
       <div className="dropdown-container">
         <div className="dropdown">
