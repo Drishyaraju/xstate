@@ -120,7 +120,7 @@ const XState = () => {
 
       {selectedCountry && selectedState && selectedCity && (
         <div>
-          <p className='selected'>
+          <p style={{fontSize:'20px'}}>
             <span style={{ fontWeight: 'bold' }}>You Selected </span>
             <span style={{ fontSize: '28px', fontWeight: 'bold', color: 'black' }}>{selectedCity},</span>
             <span style={{ fontWeight:'600',color: 'grey' }}> {selectedState}, {selectedCountry}</span>
