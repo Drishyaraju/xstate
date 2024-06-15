@@ -25,38 +25,38 @@ const XState = () => {
   }, []);
 
   useEffect(() => {
-    if (!!formData.country) {
-      const fetchStates = async () => {
-        try {
-          const response = await fetch(`https://crio-location-selector.onrender.com/country=${formData.country}/states`);
-          const data = await response.json();
-          setStates(data);
-        } catch (error) {
-          console.error('Error fetching states:', error);
-        }
-      };
+    const fetchStates = async () => {
+      try {
+        const response = await fetch(`https://crio-location-selector.onrender.com/country=${formData.country}/states`);
+        const data = await response.json();
+        setStates(data);
+      } catch (error) {
+        console.error('Error fetching states:', error);
+      }
+    };
 
+    if (!!formData.country) {
       fetchStates();
       setCities([]);
     }
   }, [formData.country]);
 
   useEffect(() => {
-    if (!!formData.state) {
-      const fetchCities = async () => {
-        try {
-          const response = await fetch(`https://crio-location-selector.onrender.com/country=${formData.country}/state=${formData.state}/cities`);
-          const data = await response.json();
-          setCities(data);
-        } catch (error) {
-          console.error('Error fetching cities:', error);
-        }
-      };
+    const fetchCities = async () => {
+      try {
+        const response = await fetch(`https://crio-location-selector.onrender.com/country=${formData.country}/state=${formData.state}/cities`);
+        const data = await response.json();
+        setCities(data);
+      } catch (error) {
+        console.error('Error fetching cities:', error);
+      }
+    };
 
+    if (!!formData.state) {
       fetchCities();
       setFormData((data) => ({ ...data, city: '' }));
     }
-  }, [formData.state]);
+  }, [formData.state, formData.country]);
 
   const handleCountryChange = (e) => {
     setFormData({ ...formData, country: e.target.value, state: '', city: '' });
@@ -73,28 +73,28 @@ const XState = () => {
   return (
     <div className='app-container'>
       <h1>Select Location</h1>
-      <div className="dropdown-container">
-        <div className="dropdown">
+      <div className='dropdown-container'>
+        <div className='dropdown'>
           <select value={formData.country} onChange={handleCountryChange}>
-            <option value="">--Select Country--</option>
+            <option value=''>--Select Country--</option>
             {countries.map((country) => (
               <option key={country} value={country}>{country}</option>
             ))}
           </select>
         </div>
         
-        <div className="dropdown">
+        <div className='dropdown'>
           <select value={formData.state} onChange={handleStateChange} disabled={!formData.country}>
-            <option value="">--Select State--</option>
+            <option value=''>--Select State--</option>
             {states.map((state) => (
               <option key={state} value={state}>{state}</option>
             ))}
           </select>
         </div>
 
-        <div className="dropdown">
+        <div className='dropdown'>
           <select value={formData.city} onChange={handleCityChange} disabled={!formData.state}>
-            <option value="">--Select City--</option>
+            <option value=''>--Select City--</option>
             {cities.map((city) => (
               <option key={city} value={city}>{city}</option>
             ))}
@@ -104,10 +104,10 @@ const XState = () => {
 
       {formData.country && formData.state && formData.city && (
         <div>
-          <p style={{fontSize:'20px'}}>
+          <p style={{ fontSize: '20px' }}>
             <span style={{ fontWeight: 'bold' }}>You Selected </span>
             <span style={{ fontSize: '28px', fontWeight: 'bold', color: 'black' }}>{formData.city},</span>
-            <span style={{ fontWeight:'600',color: 'grey' }}> {formData.state}, {formData.country}</span>
+            <span style={{ fontWeight: '600', color: 'grey' }}> {formData.state}, {formData.country}</span>
           </p>
         </div>
       )}
