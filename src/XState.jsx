@@ -105,7 +105,7 @@ const XState = () => {
       {formData.country && formData.state && formData.city && (
         <div>
           <p style={{ fontSize: '20px' }}>
-            <span style={{ fontWeight: 'bold' }}>You Selected </span>
+            <span style={{ fontWeight: 'bold' }}>You selected </span>
             <span style={{ fontSize: '28px', fontWeight: 'bold', color: 'black' }}>{formData.city},</span>
             <span style={{ fontWeight: '600', color: 'grey' }}> {formData.state}, {formData.country}</span>
           </p>
