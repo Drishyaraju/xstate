@@ -25,39 +25,38 @@ const XState = () => {
   }, []);
 
   useEffect(() => {
-    const fetchStates = async () => {
-      try {
-        const response = await fetch(`https://crio-location-selector.onrender.com/country=${formData.country}/states`);
-        const data = await response.json();
-        setStates(data);
-      } catch (error) {
-        console.error('Error fetching states:', error);
-      }
-    };
+    if (!!formData.country) {
+      const fetchStates = async () => {
+        try {
+          const response = await fetch(`https://crio-location-selector.onrender.com/country=${formData.country}/states`);
+          const data = await response.json();
+          setStates(data);
+        } catch (error) {
+          console.error('Error fetching states:', error);
+        }
+      };
 
-    if (formData.country) {
       fetchStates();
       setCities([]);
-      setFormData((data) => ({ ...data, state: '', city: '' }));
     }
   }, [formData.country]);
 
   useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const response = await fetch(`https://crio-location-selector.onrender.com/country=${formData.country}/state=${formData.state}/cities`);
-        const data = await response.json();
-        setCities(data);
-      } catch (error) {
-        console.error('Error fetching cities:', error);
-      }
-    };
+    if (!!formData.state) {
+      const fetchCities = async () => {
+        try {
+          const response = await fetch(`https://crio-location-selector.onrender.com/country=${formData.country}/state=${formData.state}/cities`);
+          const data = await response.json();
+          setCities(data);
+        } catch (error) {
+          console.error('Error fetching cities:', error);
+        }
+      };
 
-    if (formData.state) {
       fetchCities();
       setFormData((data) => ({ ...data, city: '' }));
     }
-  }, [formData.country, formData.state]);
+  }, [formData.state]);
 
   const handleCountryChange = (e) => {
     setFormData({ ...formData, country: e.target.value, state: '', city: '' });
