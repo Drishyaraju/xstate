@@ -4,9 +4,11 @@ const XState = () => {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState('');
-  const [selectedState, setSelectedState] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
+  const [formData, setFormData] = useState({
+    country: '',
+    state: '',
+    city: ''
+  });
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -23,55 +25,50 @@ const XState = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedCountry) {
-      const fetchStates = async () => {
-        try {
-          const response = await fetch(`https://crio-location-selector.onrender.com/country=${selectedCountry}/states`);
-          const data = await response.json();
-          setStates(data);
-        } catch (error) {
-          console.error('Error fetching states:', error);
-        }
-      };
+    const fetchStates = async () => {
+      try {
+        const response = await fetch(`https://crio-location-selector.onrender.com/country=${formData.country}/states`);
+        const data = await response.json();
+        setStates(data);
+      } catch (error) {
+        console.error('Error fetching states:', error);
+      }
+    };
 
+    if (formData.country) {
       fetchStates();
-    } else {
-      setStates([]);
       setCities([]);
+      setFormData((data) => ({ ...data, state: '', city: '' }));
     }
-  }, [selectedCountry]);
+  }, [formData.country]);
 
   useEffect(() => {
-    if (selectedState) {
-      const fetchCities = async () => {
-        try {
-          const response = await fetch(`https://crio-location-selector.onrender.com/country=${selectedCountry}/state=${selectedState}/cities`);
-          const data = await response.json();
-          setCities(data);
-        } catch (error) {
-          console.error('Error fetching cities:', error);
-        }
-      };
+    const fetchCities = async () => {
+      try {
+        const response = await fetch(`https://crio-location-selector.onrender.com/country=${formData.country}/state=${formData.state}/cities`);
+        const data = await response.json();
+        setCities(data);
+      } catch (error) {
+        console.error('Error fetching cities:', error);
+      }
+    };
 
+    if (formData.state) {
       fetchCities();
-    } else {
-      setCities([]);
+      setFormData((data) => ({ ...data, city: '' }));
     }
-  }, [selectedCountry, selectedState]);
+  }, [formData.country, formData.state]);
 
   const handleCountryChange = (e) => {
-    setSelectedCountry(e.target.value);
-    setSelectedState('');
-    setSelectedCity('');
+    setFormData({ ...formData, country: e.target.value, state: '', city: '' });
   };
 
   const handleStateChange = (e) => {
-    setSelectedState(e.target.value);
-    setSelectedCity('');
+    setFormData({ ...formData, state: e.target.value, city: '' });
   };
 
   const handleCityChange = (e) => {
-    setSelectedCity(e.target.value);
+    setFormData({ ...formData, city: e.target.value });
   };
 
   return (
@@ -79,7 +76,7 @@ const XState = () => {
       <h1>Select Location</h1>
       <div className="dropdown-container">
         <div className="dropdown">
-          <select value={selectedCountry} onChange={handleCountryChange}>
+          <select value={formData.country} onChange={handleCountryChange}>
             <option value="">--Select Country--</option>
             {countries.map((country) => (
               <option key={country} value={country}>{country}</option>
@@ -88,7 +85,7 @@ const XState = () => {
         </div>
         
         <div className="dropdown">
-          <select value={selectedState} onChange={handleStateChange} disabled={!selectedCountry}>
+          <select value={formData.state} onChange={handleStateChange} disabled={!formData.country}>
             <option value="">--Select State--</option>
             {states.map((state) => (
               <option key={state} value={state}>{state}</option>
@@ -97,7 +94,7 @@ const XState = () => {
         </div>
 
         <div className="dropdown">
-          <select value={selectedCity} onChange={handleCityChange} disabled={!selectedState}>
+          <select value={formData.city} onChange={handleCityChange} disabled={!formData.state}>
             <option value="">--Select City--</option>
             {cities.map((city) => (
               <option key={city} value={city}>{city}</option>
@@ -106,12 +103,12 @@ const XState = () => {
         </div>
       </div>
 
-      {selectedCountry && selectedState && selectedCity && (
+      {formData.country && formData.state && formData.city && (
         <div>
           <p style={{fontSize:'20px'}}>
             <span style={{ fontWeight: 'bold' }}>You Selected </span>
-            <span style={{ fontSize: '28px', fontWeight: 'bold', color: 'black' }}>{selectedCity},</span>
-            <span style={{ fontWeight:'600',color: 'grey' }}> {selectedState}, {selectedCountry}</span>
+            <span style={{ fontSize: '28px', fontWeight: 'bold', color: 'black' }}>{formData.city},</span>
+            <span style={{ fontWeight:'600',color: 'grey' }}> {formData.state}, {formData.country}</span>
           </p>
         </div>
       )}
